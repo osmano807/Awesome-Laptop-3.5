@@ -47,7 +47,7 @@ vicious.register(batpct, vicious.widgets.bat, function(widget, args)
   end
 
   return args[2] .. "%"
-end, nil, "BAT1")
+end, nil, "BAT0")
 
 -- Buttons
 function popup_bat()
@@ -137,7 +137,7 @@ cpuicon = wibox.widget.imagebox()
 cpuicon:set_image(beautiful.widget_cpu)
 --
 cpu = wibox.widget.textbox()
-vicious.register(cpu, vicious.widgets.cpu, "All: $1% 1: $2% 2: $3% 3: $4% 4: $5%", 2)
+vicious.register(cpu, vicious.widgets.cpu, "All: $1% 1: $2% 2: $3%", 2)
 -- End CPU }}}
 --
 -- {{{ Start Mem
@@ -169,5 +169,5 @@ wifiicon = wibox.widget.imagebox()
 wifiicon:set_image(beautiful.widget_wifi)
 --
 wifi = wibox.widget.textbox()
-vicious.register(wifi, vicious.widgets.wifi, "${ssid} Rate: ${rate}MB/s Link: ${link}%", 3, "wlp3s0")
+vicious.register(wifi, vicious.widgets.wifi, "${ssid} Rate: ${rate}MB/s Link: ${link}%", 3, "wlp1s0")
 -- End Wifi }}}
