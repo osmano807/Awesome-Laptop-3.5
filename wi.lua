@@ -88,12 +88,12 @@ vicious.register(pacwidget, vicious.widgets.pkg, function(widget, args)
    end
 
   return args[1]
-  end, 1801, "Arch S") -- Arch S for ignorepkg
+  end, 1801, "Arch C") -- Arch S for ignorepkg
 --
 -- Buttons
   function popup_pac()
   local pac_updates = ""
-  local f = io.popen("pacman -Sup --dbpath /tmp/pacsync")
+  local f = io.popen("pacman -Sup --dbpath" ..  os.getenv('CHECKUPDATES_DB'))
   if f then
   pac_updates = f:read("*a"):match(".*/(.*)-.*\n$")
   end
