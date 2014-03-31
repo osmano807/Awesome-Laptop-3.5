@@ -157,10 +157,6 @@ local item = { l, function () wall_load(l) end }
 spacer       = wibox.widget.textbox()
 spacer:set_text(' | ')
 
---Weather Widget
-weather = wibox.widget.textbox()
-vicious.register(weather, vicious.widgets.weather, "Weather: ${city}. Sky: ${sky}. Temp: ${tempc}c Humid: ${humid}%. Wind: ${windkmh} KM/h", 1200, "YMML")
-
 --Battery Widget
 batt = wibox.widget.textbox()
 vicious.register(batt, vicious.widgets.bat, "Batt: $2% Rem: $3", 61, "BAT1")
@@ -305,8 +301,6 @@ for s = 1, screen.count() do
     bottom_layout:add(spacer)
     bottom_layout:add(wifiicon)
     bottom_layout:add(wifi)
-    bottom_layout:add(spacer)
-    bottom_layout:add(weather)
     bottom_layout:add(spacer)
 
  -- Now bring it all together 
