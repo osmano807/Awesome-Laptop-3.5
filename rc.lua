@@ -18,7 +18,7 @@ local menubar = require("menubar")
 --FreeDesktop
 require('freedesktop.utils')
 require('freedesktop.menu')
-freedesktop.utils.icon_theme = 'gnome'
+freedesktop.utils.icon_theme = 'faenza'
 --Vicious + Widgets 
 vicious = require("vicious")
 local wi = require("wi")
