@@ -5,6 +5,7 @@ home_path  = os.getenv('HOME') .. '/'
 local gears = require("gears")
 local awful = require("awful")
 awful.rules = require("awful.rules")
+local tyrannical = require("tyrannical")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
