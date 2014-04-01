@@ -16,8 +16,7 @@ beautiful.init( awful.util.getdir("config") .. "/themes/default/theme.lua" )
 local naughty = require("naughty")
 local menubar = require("menubar")
 --FreeDesktop
-require('freedesktop.utils')
-require('freedesktop.menu')
+local freedesktop = require('freedesktop')
 freedesktop.utils.icon_theme = 'faenza'
 --Vicious + Widgets 
 vicious = require("vicious")
@@ -50,6 +49,7 @@ end
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvtc"
+freedesktop.utils.terminal = terminal
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 

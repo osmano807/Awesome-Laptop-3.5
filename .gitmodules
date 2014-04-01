@@ -1,0 +1,3 @@
+[submodule "freedesktop"]
+	path = freedesktop
+	url = https://github.com/mony960/awesome-freedesktop.git
