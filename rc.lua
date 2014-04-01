@@ -442,6 +442,15 @@ for i = 1, keynumber do
                   end))
 end
 
+globalkeys = awful.util.table.join(globalkeys,
+        -- 0 key keycode
+        awful.key({ modkey }, "#19",
+                  function ()
+                        local screen = mouse.screen
+                        awful.tag.viewnone(screen)
+                  end))
+
+
 clientbuttons = awful.util.table.join(
     awful.button({ }, 1, function (c) client.focus = c; c:raise() end),
     awful.button({ modkey }, 1, awful.mouse.client.move),
