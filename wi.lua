@@ -88,23 +88,61 @@ vicious.register(pacwidget, vicious.widgets.pkg, function(widget, args)
    end
 
   return args[1]
-  end, 1801, "Arch C") -- Arch S for ignorepkg
+  end, 1801, "Arch C")
 --
 -- Buttons
-  function popup_pac()
-  local pac_updates = ""
-  local f = io.popen("pacman -Sup --dbpath" ..  os.getenv('CHECKUPDATES_DB'))
-  if f then
-  pac_updates = f:read("*a"):match(".*/(.*)-.*\n$")
-  end
-  f:close()
-  if not pac_updates then
-  pac_updates = "System is up to date"
-  end
-  naughty.notify { text = pac_updates }
-  end
-  pacwidget:buttons(awful.util.table.join(awful.button({ }, 1, popup_pac)))
-  pacicon:buttons(pacwidget:buttons())
+function popup_pac()
+local pac_versions = {}
+
+local f = io.popen("pacman -Qu --dbpath " ..  os.getenv('CHECKUPDATES_DB'))
+if f then
+	for line in f:lines() do
+		pkg, oldver = line:match("^(%S+) (%S+)$")
+		if pkg and oldver then
+			if not pac_versions[pkg] then
+				pac_versions[pkg] = {}
+			end
+			pac_versions[pkg]["old"] = oldver
+		end
+	end
+end
+f:close()
+
+local f = io.popen("pacman -Sup --print-format '%n %v' --dbpath " ..  os.getenv('CHECKUPDATES_DB'))
+if f then
+	for line in f:lines() do
+		pkg, newver = line:match("^(%S+) (%S+)$")
+		if pkg and newver then
+			-- we should have pac_versions[pkg] by now
+			pac_versions[pkg]["new"] = newver
+		end
+	end
+end
+f:close()
+
+local pac_updates = ""
+
+if not pac_versions then
+	pac_updates = "System is up to date"
+else
+	local pac_updates_t = {}
+	for pkg, vers in pairs(pac_versions) do
+		if vers["old"] and vers["new"] then
+			table.insert(pac_updates_t, pkg .. " " .. vers["old"] .. " -> " .. vers["new"])
+		end
+	end
+	if not pac_updates_t then
+		pac_updates = "System is up to date"
+	else
+                table.insert(pac_updates_t, "")
+		pac_updates = table.concat(pac_updates_t, "\n")
+	end
+
+end
+naughty.notify { text = pac_updates }
+end
+pacwidget:buttons(awful.util.table.join(awful.button({ }, 1, popup_pac)))
+pacicon:buttons(pacwidget:buttons())
 -- End Pacman }}}
 --
 -- {{{ VOLUME
