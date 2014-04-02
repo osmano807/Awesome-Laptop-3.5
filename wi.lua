@@ -113,7 +113,7 @@ if f then
 end
 f:close()
 
-if not pac_updates then
+if pac_updates == nil or pac_updates == '' then
 	pac_updates = "System is up to date"
 end
 naughty.notify { text = pac_updates }
