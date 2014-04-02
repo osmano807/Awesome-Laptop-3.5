@@ -80,64 +80,41 @@ pacicon:set_image(beautiful.widget_pac)
 --
 -- Upgrades
 pacwidget = wibox.widget.textbox()
-vicious.register(pacwidget, vicious.widgets.pkg, function(widget, args)
-   if args[1] > 0 then
-   pacicon:set_image(beautiful.widget_pacnew)
-   else
-   pacicon:set_image(beautiful.widget_pac)
-   end
+function updatePacWidget()
+    local count = 0
+    local f = io.open(os.getenv('CHECKUPDATES_DB') .. "/updates.log")
+    if f then
+        for line in f:lines() do
+            count = count + 1
+        end
+    end
+    f:close()
 
-  return args[1]
-  end, 1801, "Arch C")
+    if count > 0 then
+        pacicon:set_image(beautiful.widget_pacnew)
+    else
+        pacicon:set_image(beautiful.widget_pac)
+    end
+
+    pacwidget:set_text(tostring(count))
+
+end
+awful.util.spawn_with_shell(awful.util.getdir("config") .. "/packages_updates.sh")
+updatePacWidget()
+
 --
 -- Buttons
 function popup_pac()
-local pac_versions = {}
-
-local f = io.popen("pacman -Qu --dbpath " ..  os.getenv('CHECKUPDATES_DB'))
-if f then
-	for line in f:lines() do
-		pkg, oldver = line:match("^(%S+) (%S+)$")
-		if pkg and oldver then
-			if not pac_versions[pkg] then
-				pac_versions[pkg] = {}
-			end
-			pac_versions[pkg]["old"] = oldver
-		end
-	end
-end
-f:close()
-
-local f = io.popen("pacman -Sup --print-format '%n %v' --dbpath " ..  os.getenv('CHECKUPDATES_DB'))
-if f then
-	for line in f:lines() do
-		pkg, newver = line:match("^(%S+) (%S+)$")
-		if pkg and newver then
-			-- we should have pac_versions[pkg] by now
-			pac_versions[pkg]["new"] = newver
-		end
-	end
-end
-f:close()
-
 local pac_updates = ""
 
-if not pac_versions then
-	pac_updates = "System is up to date"
-else
-	local pac_updates_t = {}
-	for pkg, vers in pairs(pac_versions) do
-		if vers["old"] and vers["new"] then
-			table.insert(pac_updates_t, pkg .. " " .. vers["old"] .. " -> " .. vers["new"])
-		end
-	end
-	if not pac_updates_t then
-		pac_updates = "System is up to date"
-	else
-                table.insert(pac_updates_t, "")
-		pac_updates = table.concat(pac_updates_t, "\n")
-	end
+local f = io.open(os.getenv('CHECKUPDATES_DB') .. "/updates.log")
+if f then
+	pac_updates = f:read("*all")
+end
+f:close()
 
+if not pac_updates then
+	pac_updates = "System is up to date"
 end
 naughty.notify { text = pac_updates }
 end
